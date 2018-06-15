@@ -19,6 +19,16 @@ class Network {
 				this.neuron[l][n] = new Neuron(hiddenNode, 0);
 		}
 	}
+	
+	//출력
+	double[] output() {
+		double[] output = new double[neuron[neuron.length - 1].length];
+		for(int i = 0; i < output.length; i++) {
+			output[i] = neuron[neuron.length - 1][i].output();
+		}
+		return output;
+	}
+			
 	//입력
 	void input(double input[]) {
 		for(int i = 0; i < neuron[0].length; i++) {
@@ -41,7 +51,9 @@ class Network {
 		}
 	}
 	void calculate() {
-		
+		for(int l = 1; l < neuron.length; l++)
+		for(int n = 0; n < neuron[l].length; n++)
+			neuron[l][n].process(neuron[l - 1]);
 	}
 	
 	private int xy(int x, int y) {
