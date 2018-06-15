@@ -1,8 +1,11 @@
 package com.wei.betago;
 
+import java.util.Scanner;
+
 public class BetaGo {
 	
 	static int x = 15, y = 15, layers = 3;
+	static int px, py;
 
 	public static void main(String[] args) {
 		Board board = new Board(x, y); // 보드 초기화
@@ -10,14 +13,24 @@ public class BetaGo {
 		
 		AI.input(board.getBoard()); // AI에 현재상황 전달
 		board.resetBoard();
-		show("현재 턴: " + board.nowTurn());
-		board.setTurn(7, 7);
-		show("현재 턴: " + board.nowTurn());
-		board.setTurn(5, 7);
-		show("현재 턴: " + board.nowTurn());
-		board.setTurn(5, 7);
+		show("A:Game Start");
+		
+		//플레이어 차례
+		Scanner userInput = new Scanner(System.in);
 		board.drawBoard();
 		show(board.whoIsWinner());
+
+		while(board.whoIsWinner() == -1)
+		{
+			show("I:현재 차례(" + board.nowTurn() + ")");
+			show("Q:돌을 둘 X좌표값?");
+			px = userInput.nextInt();
+			show("Q:돌을 둘 Y좌표값?");
+			py = userInput.nextInt();
+			board.setTurn(px, py);
+			board.drawBoard();
+			show(board.whoIsWinner());
+		}
 	}
 	
 	

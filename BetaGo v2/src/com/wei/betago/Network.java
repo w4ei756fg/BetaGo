@@ -20,7 +20,7 @@ class Network {
 		}
 	}
 	//입력
-	public void input(double input[]) {
+	void input(double input[]) {
 		for(int i = 0; i < neuron[0].length; i++) {
 			if (i < input.length)
 				neuron[0][i].put(input[i]);
@@ -31,7 +31,7 @@ class Network {
 		}
 	}
 	//for gomoku
-	public void input(int input[][]) {
+	void input(int input[][]) {
 		for(int x = 0; x < 15; x++)
 		for(int y = 0; y < 15; y++)
 		{
@@ -40,11 +40,11 @@ class Network {
 			System.out.println("입력[" + x + ", " + y + "]: " + neuron[0][xy(x, y)].output());
 		}
 	}
-	public void calculate() {
+	void calculate() {
 		
 	}
 	
-	int xy(int x, int y) {
+	private int xy(int x, int y) {
 		return x + y * 15;
 	}
 	

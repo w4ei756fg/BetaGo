@@ -97,73 +97,39 @@ class Board {
 	}
 	
 	int whoIsWinner() {
-		//가로
-		for(int xx = 0; xx < x - 4; xx++)
+		for(int xx = 0; xx < x; xx++)
 		for(int yy = 0; yy < y; yy++)
 		{
-			if (board[xx][yy] == 5 && 
-				board[xx + 1][yy] == 5 && 
-				board[xx + 2][yy] == 5 && 
-				board[xx + 3][yy] == 5 && 
-				board[xx + 4][yy] == 5)
-				return 1;
-			if (board[xx][yy] == -5 && 
-				board[xx + 1][yy] == -5 && 
-				board[xx + 2][yy] == -5 && 
-				board[xx + 3][yy] == -5 && 
-				board[xx + 4][yy] == -5)
-				return 0;
-		}
-		//세로
-		for(int xx = 0; xx < x; xx++)
-		for(int yy = 0; yy < y - 4; yy++)
-		{
-			if (board[xx][yy] == 5 && 
-				board[xx][yy + 1] == 5 && 
-				board[xx][yy + 2] == 5 && 
-				board[xx][yy + 3] == 5 && 
-				board[xx][yy + 4] == 5)
-				return 1;
-			if (board[xx][yy] == -5 && 
-				board[xx][yy + 1] == -5 && 
-				board[xx][yy + 2] == -5 && 
-				board[xx][yy + 3] == -5 && 
-				board[xx][yy + 4] == -5)
-				return 0;
-		}
-		// \대각선
-		for(int xx = 0; xx < x - 4; xx++)
-		for(int yy = 0; yy < y - 4; yy++)
-		{
-			if (board[xx][yy] == 5 && 
-				board[xx + 1][yy + 1] == 5 && 
-				board[xx + 2][yy + 2] == 5 && 
-				board[xx + 3][yy + 3] == 5 && 
-				board[xx + 4][yy + 4] == 5)
-				return 1;
-			if (board[xx][yy] == -5 && 
-				board[xx + 1][yy + 1] == -5 && 
-				board[xx + 2][yy + 2] == -5 && 
-				board[xx + 3][yy + 3] == -5 && 
-				board[xx + 4][yy + 4] == -5)
-				return 0;
-		}
-		// /대각선
-		for(int xx = 0; xx < x - 4; xx++)
-		for(int yy = 0; yy < y - 4; yy++)
-		{
-			if (board[xx + 4][yy] == 5 && 
-				board[xx + 3][yy + 1] == 5 && 
-				board[xx + 2][yy + 2] == 5 && 
-				board[xx + 1][yy + 3] == 5 && 
-				board[xx][yy + 4] == 5)
-				return 1;
-			if (board[xx + 4][yy] == -5 && 
-				board[xx + 3][yy + 1] == -5 && 
-				board[xx + 2][yy + 2] == -5 && 
-				board[xx + 1][yy + 3] == -5 && 
-				board[xx][yy + 4] == -5)
-				return 0;
+			for(int t = 0; t < 2; t++)
+			{
+				//가로
+				int d = 0;
+				for(int i = 0; i < 5; i++)
+					if (xx + i < x && board[xx + i][yy] != 0 && (board[xx + i][yy] % 2) == t)
+						d++;
+				if (d == 5) { return t; }
+				
+				//세로
+				d = 0;
+				for(int i = 0; i < 5; i++)
+					if (yy + i < y && board[xx][yy + i] != 0 && (board[xx][yy + i] % 2) == t)
+						d++;
+				if (d == 5) { return t; }
+				
+				// \대각선
+				d = 0;
+				for(int i = 0; i < 5; i++)
+					if (xx + i < x && yy + i < y && board[xx + i][yy + i] != 0 && (board[xx + i][yy + i] % 2) == t)
+						d++;
+				if (d == 5) { return t; }
+				
+				// /대각선
+				d = 0;
+				for(int i = 0; i < 5; i++)
+					if (xx + 4 - i < x && yy + i < y && board[xx + 4 - i][yy + i] != 0 && (board[xx + 4 - i][yy + i] % 2) == t)
+						d++;
+				if (d == 5) { return t; }
+			}
 		}
 		return -1;
 	}
