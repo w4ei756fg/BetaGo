@@ -10,8 +10,25 @@ public class BetaGo {
 		
 		AI.input(board.getBoard()); // AI에 현재상황 전달
 		board.resetBoard();
-		board.setBoard(1, 7, 7);
-		board.setBoard(0, 5, 7);
+		show("현재 턴: " + board.nowTurn());
+		board.setTurn(7, 7);
+		show("현재 턴: " + board.nowTurn());
+		board.setTurn(5, 7);
+		show("현재 턴: " + board.nowTurn());
+		board.setTurn(5, 7);
 		board.drawBoard();
+		show(board.whoIsWinner());
+	}
+	
+	
+	
+	static void show(String str) {
+		System.out.println(str);
+	}
+	static void show(int str) {
+		System.out.println(str);
+	}
+	static void show(double str) {
+		System.out.println(str);
 	}
 }
