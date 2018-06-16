@@ -91,6 +91,10 @@ class Board {
 	int[][] getBoard() {
 		return board;
 	}
+	//특정 좌표 출력
+	int getBoard(int x, int y) {
+		return board[x][y];
+	}
 	
 	int xy(int x, int y) {
 		return x + y * 15;

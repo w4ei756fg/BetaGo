@@ -96,9 +96,10 @@ public class BetaGo {
 			{
 				//플레이어 차례
 				show("I:현재 차례(" + board.nowTurn() + ")");
-				show("Q:돌을 둘 X좌표값?");
+				show("Q:돌을 둘 좌표값?");
+				System.out.print("x:");
 				px = userInput.nextInt();
-				show("Q:돌을 둘 Y좌표값?");
+				System.out.print("y:");
 				py = userInput.nextInt();
 				board.setTurn(px, py);
 				show(board.whoIsWinner());
@@ -112,7 +113,7 @@ public class BetaGo {
 				int max = 0;
 				//최적값 최댓값 구하기
 				for(int i = 0; i < optimalData.length; i++) {
-					if (optimalData[i] > optimalData[max]) {
+					if (optimalData[i] > optimalData[max] || (board.getBoard(max / x , max % x) != 0 && optimalData[i] <= optimalData[max])) {
 						max = i;
 					}
 				}
