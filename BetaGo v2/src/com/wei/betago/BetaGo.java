@@ -2,89 +2,127 @@ package com.wei.betago;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BetaGo {
 	
 	static int x = 15, y = 15, layers = 3;
 	static int px, py;
+	static String path = "D:\\JAVA Projects", file = "neuron", dataFile = "D:/test.csv";
 
 	static Board board = new Board(x, y); // 보드 초기화
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws IOException {
 
+		int mode = 0;
 		Scanner userInput = new Scanner(System.in);
-		show("1. 플레이(사람vs사람)");
-		show("2. 플레이(사람vsAI)");
-		show("3. AI 학습모드");
-		show("4. 테스트모드");
-		switch(userInput.nextInt()) {
-		case 1:
-			playHumanvsHuman();
+		Scanner rateInput = new Scanner(System.in);
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		show("Q:Path?");
+		path = br.readLine();
+		show("Q:File?");
+		file = br.readLine();
+		show("Q:Datafile?");
+		dataFile = br.readLine();
+		do {
+			show("1. 플레이(사람vs사람)");
+			show("2. 플레이(사람vsAI)");
+			show("3. AI 학습모드");
+			show("4. 테스트모드");
+			show("5. 종료");
+			mode = userInput.nextInt();
+			//mode = 3;
+			switch(mode) {
+			case 1:
+				playHumanvsHuman();
+				break;
+			case 2:
+				playHumanvsAI();
+				break;
+			case 3:
+				show("Q:변화율?");
+				Double rate = rateInput.nextDouble();
+				show("Q:반복 횟수?");
+				int c = userInput.nextInt();
+				for(int i = 0; i < c; i++)
+					learnAI(rate);
+				break;
+			case 4:
+				int[] sss = {1, 2, 3};
+				int[] ddd = sss.clone();
+				sss[0] = 3;
+				show(sss[0]);
+				show(ddd[0]);
 			break;
-		case 2:
-			playHumanvsAI();
-			break;
-		case 3:
-			learnAI();
-			break;
-		case 4:
-			int[] sss = {1, 2, 3};
-			int[] ddd = sss.clone();
-			sss[0] = 3;
-			show(sss[0]);
-			show(ddd[0]);
-		break;
-		}
+			}
+		} while(mode != 5);
 		
 		
-		
+		userInput.close();
+		rateInput.close();
 	}
 	
-	static void learnAI() {
-		String[] rawData = loadCSV("D:/test.csv");
-		if (rawData.length > 1) {
-			int[][] data = new int[rawData.length/2][2];
-			for(int i = 0; i < rawData.length / 2; i++) {
-				data[i][0] = Integer.parseInt(rawData[i*2]);
-				data[i][1] = Integer.parseInt(rawData[i*2 + 1]);
-			}
-			Learning learn = new Learning(data, x, y, layers);
+	static void learnAI(double rate) {
+		String[][] rawData = loadCSV(dataFile);
+		if (rawData != null) {
+			show("I:불러오기 성공");
+			int[][] data = new int[rawData.length][2];
+			for(int i = 0; i < rawData.length; i++)
+			for(int ii = 0; ii < 2; ii++)
+				data[i][ii] = Integer.parseInt(rawData[i][ii]);
+			show("I:학습 봇 생성");
+			Learning learn = new Learning(data, x, y, layers, path, file);
+			show("I:학습 봇 생성됨");
+			show("I:학습시작");
+			learn.learn(rate);
 		}
 		else
 			show("E:데이터가 올바르지 않습니다.");
 	}
 	
-	static String[] loadCSV(String path) {
+	static String[][] loadCSV(String path) {
 		BufferedReader br = null;
 		String line;
-		String[] temp = {""};
+		List<String[]> temp = new ArrayList<String[]>();
+		String[][] data = null;
 		try {
 			br = new BufferedReader(new FileReader(path));
-			//while((line = br.readLine()) != null) {
-			if ((line = br.readLine()) != null)
-			{
-				temp = line.split(","); // 쉼표로 구분
-					
-				
+			while((line = br.readLine()) != null) {
+				String[] tt = line.split(",");
+				temp.add(tt); // 쉼표로 구분
+				/*
 				for(int i=0; i<temp.length; i++) {
 					System.out.print((i+1)+": "+temp[i]);
 					if(i!=temp.length-1) System.out.print(", ");
 					else System.out.println();
 				}
-				
+				*/
 			}
-			return temp;
+			br.close();
+			
+			show("size: " + temp.size());
+			data = new String[temp.size()][2];
+			for(int i = 0; i < temp.size(); i++) {
+				data[i][0] = temp.get(i)[0];
+				data[i][1] = temp.get(i)[1];
+				show(i + ",x: " + temp.get(i)[0]);
+				show(i + ",y: " + temp.get(i)[1]);
+			}
+			return data;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return temp;
+		return data;
 	}
 	
 	//사람vsAI (자동)
 	static void playHumanvsAI() {
 		Network AI = new Network(x*y, x*y, layers, x*y); // AI 초기화
+		AI.importNetwork(path, file);
 		board.resetBoard();
 		show("A:Game Start");
 		Scanner userInput = new Scanner(System.in);
@@ -123,6 +161,7 @@ public class BetaGo {
 			}
 		}
 		board.drawBoard();
+		userInput.close();
 	}
 	
 	//사람vs사람 (수동)
@@ -146,6 +185,7 @@ public class BetaGo {
 			board.drawBoard();
 			show(board.whoIsWinner());
 		}
+		userInput.close();
 	}
 	
 	

@@ -6,11 +6,21 @@ class Neuron {
 	Neuron(int prevLayerCount, double input) {
 		this.weight = new double[prevLayerCount];
 		this.input = input;
+		
+		//초기화
+		randomWeights();
 	}
-	//입력(입력 레이어용)
-	public void put(double input) {
-		this.input = input;
+	
+	//가중치 랜덤 초기화
+	void randomWeights() {
+		for(int i = 0; i < weight.length; i++) {
+			weight[i] = Math.random() * 2 - 1;
+		}
 	}
+	
+	//입력 (input레이어에 사용)
+	void put(double input) { this.input = input; }
+	void process() { this.output = sigmoid(input); }
 	
 	//연산
 	void process(Neuron[] inputNeuron) {
@@ -26,37 +36,20 @@ class Neuron {
 	void process(double[] input) {
 		double result = 0;
 		for(int i = 0; i < weight.length; i++)
-			result += weight[i] * input[i];
+			result += weight[i] * input[i];//행렬곱
 		this.output = sigmoid(result);
-	}
-	void process() { // input레이어에 사용
-		this.output = sigmoid(input);
 	}
 	
 	//출력
-	double output() {
-		return output;
-	}
-	
-	//가중치값 출력
-	double[] getWeights() {
-		return weight;
-	}
-	double getWeight(int i) {
-		return weight[i];
-	}
-	
+	double output() { return output; }
+
 	//가중치값 입력
-	void setWeights(double[] weight) {
-		this.weight = weight.clone();
-	}
-	void setWeight(int i, double weight) {
-		this.weight[i] = weight;
-	}
-	
+	void setWeights(double[] weight) { this.weight = weight.clone(); }
+	void setWeight(int i, double weight) { this.weight[i] = weight; }
+	//가중치값 출력
+	double[] getWeights() { return weight; }
+	double getWeight(int i) { return weight[i]; }
 	
 	//활성 함수
-	private double sigmoid(double x) {
-		return (double)1 / ((double)1 + Math.exp(-x));
-	}
+	private double sigmoid(double x) { return (double)1 / ((double)1 + Math.exp(-x)); }
 }
