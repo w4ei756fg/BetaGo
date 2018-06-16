@@ -13,7 +13,7 @@ class Neuron {
 	}
 	
 	//연산
-	public void process(Neuron[] inputNeuron) {
+	void process(Neuron[] inputNeuron) {
 		double[] input = new double[inputNeuron.length];
 		for(int i = 0; i < input.length; i++) {
 			input[i] = inputNeuron[i].output();
@@ -23,19 +23,35 @@ class Neuron {
 			result += weight[i] * input[i];
 		this.output = sigmoid(result);
 	}
-	public void process(double[] input) {
+	void process(double[] input) {
 		double result = 0;
 		for(int i = 0; i < weight.length; i++)
 			result += weight[i] * input[i];
 		this.output = sigmoid(result);
 	}
-	public void process() { // input레이어에 사용
+	void process() { // input레이어에 사용
 		this.output = sigmoid(input);
 	}
 	
 	//출력
-	public double output() {
+	double output() {
 		return output;
+	}
+	
+	//가중치값 출력
+	double[] getWeights() {
+		return weight;
+	}
+	double getWeight(int i) {
+		return weight[i];
+	}
+	
+	//가중치값 입력
+	void setWeights(double[] weight) {
+		this.weight = weight.clone();
+	}
+	void setWeight(int i, double weight) {
+		this.weight[i] = weight;
 	}
 	
 	

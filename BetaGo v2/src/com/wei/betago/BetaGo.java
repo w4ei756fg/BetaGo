@@ -30,9 +30,11 @@ public class BetaGo {
 			learnAI();
 			break;
 		case 4:
-			int[][] sss = new int[2][3];
-			show(sss.length);
-			show(sss[0].length);
+			int[] sss = {1, 2, 3};
+			int[] ddd = sss.clone();
+			sss[0] = 3;
+			show(sss[0]);
+			show(ddd[0]);
 		break;
 		}
 		
@@ -44,11 +46,11 @@ public class BetaGo {
 		String[] rawData = loadCSV("D:/test.csv");
 		if (rawData.length > 1) {
 			int[][] data = new int[rawData.length/2][2];
-			for(int i = 0; i < rawData.length; i++) {
+			for(int i = 0; i < rawData.length / 2; i++) {
 				data[i][0] = Integer.parseInt(rawData[i*2]);
 				data[i][1] = Integer.parseInt(rawData[i*2 + 1]);
 			}
-			Learning learn = new Learning(data, x, y);
+			Learning learn = new Learning(data, x, y, layers);
 		}
 		else
 			show("E:데이터가 올바르지 않습니다.");
