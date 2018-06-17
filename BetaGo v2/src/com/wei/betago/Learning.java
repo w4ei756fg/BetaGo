@@ -89,7 +89,8 @@ class Learning {
 			//가중치 조정   3
 			for(int j = 0; j < weight.length; j++) // right;output
 			for(int i = 0; i < weight[j].length; i++) { // left;input
-				weight[j][i] = Math.min(Math.max(weight[j][i] - rate * error[j] * output[j] * (1 - output[j]) * input[i], -1), 1);
+				weight[j][i] = weight[j][i] - rate * error[j] * output[j] * (1 - output[j]) * input[i];
+				//weight[j][i] = Math.min(Math.max(weight[j][i] - rate * error[j] * output[j] * (1 - output[j]) * input[i] -1), 1);
 				//if (ii == 2 && l == 1)
 				//show("가중치[" + l + ", " + k + ", " + j + "]: " + (error[ll][k] * neuronOutput[ll][k] * (1 - neuronOutput[ll][k]) * neuronOutput[ll - 1][j]));
 			}

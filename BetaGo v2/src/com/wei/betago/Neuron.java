@@ -14,7 +14,7 @@ class Neuron {
 	//가중치 랜덤 초기화
 	void randomWeights() {
 		for(int i = 0; i < weight.length; i++) {
-			weight[i] = Math.random() * 2 - 1;
+			weight[i] = (Math.random() - 0.5) * (1D / Math.sqrt(weight.length)) * 2;
 		}
 	}
 	
