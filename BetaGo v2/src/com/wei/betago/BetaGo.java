@@ -63,8 +63,12 @@ public class BetaGo {
 				int c = userInput.nextInt();
 				show("Q:뉴런 정보를 초기화 후 학습? 1=yes 0=no");
 				int reset = userInput.nextInt();
-				for(int i = 0; i < c; i++)
+				for(int i = 0; i < c; i++) {
 					learnAI(rate, reset);
+					if (i % 100 == 0)
+						show(i + "번째 학습 시작");
+				}
+				show("A:학습 종료");
 				break;
 			case 4:
 				Network AI = new Network(x*y, x*y, layers, x*y);
@@ -85,15 +89,15 @@ public class BetaGo {
 	static void learnAI(double rate, int reset) {
 		String[][] rawData = loadCSV(dataFile);
 		if (rawData != null) {
-			show("I:불러오기 성공");
+			//show("I:불러오기 성공");
 			int[][] data = new int[rawData.length][2];
 			for(int i = 0; i < rawData.length; i++)
 			for(int ii = 0; ii < 2; ii++)
 				data[i][ii] = Integer.parseInt(rawData[i][ii]);
-			show("I:학습 봇 생성");
+			//show("I:학습 봇 생성");
 			Learning learn = new Learning(data, x, y, layers, reset, path, file);
-			show("I:학습 봇 생성됨");
-			show("I:학습시작");
+			//show("I:학습 봇 생성됨");
+			//show("I:학습시작");
 			learn.learnData(rate);
 		}
 		else

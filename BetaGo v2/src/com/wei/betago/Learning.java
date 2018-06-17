@@ -42,7 +42,7 @@ class Learning {
 		double[] error = new double[target.length], error_next = new double[error.length];
 		
 
-		show("I:" + turn + "번째 수 학습시작");
+		//show("I:" + turn + "번째 수 학습시작");
 
 		for(int y = 0; y < this.y; y++)
 		for(int x = 0; x < this.x; x++) {
@@ -69,8 +69,8 @@ class Learning {
 			//n층 오차 구함
 			if (l == layers - 1) { // output layer 일 때,   1
 				for(int i = 0; i < output.length; i++) {
-					error[i] = Math.pow(output[i] - target[i], 2); // output계층 오차함수
-					show("error[" + l + "," + i + "]: " + error[i]);
+					error[i] = output[i] - target[i];//Math.pow(output[i] - target[i], 2); // output계층 오차함수
+					//show("error[" + l + "," + i + "]: " + error[i]); // 출력 계층 오차 표시
 				}
 				error_next = error;
 			}
@@ -81,7 +81,7 @@ class Learning {
 					error[n] = 0;
 					for(int j = 0; j < weight.length; j++) { // right;output
 						error[n] += error_next[j] * weight[j][n];
-						show("error[" + l + "," + n + "]: " + error[n]);
+						//show("error[" + l + "," + n + "]: " + error[n]);
 					}
 				}
 				error_next = error;

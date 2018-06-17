@@ -70,7 +70,7 @@ class Network {
 			else
 				neuron[0][i].put(0);
 			neuron[0][i].process();
-			System.out.println("입력[" + i + "]: " + neuron[0][i].output());
+			//System.out.println("입력[" + i + "]: " + neuron[0][i].output());
 		}
 	}
 	//for game
@@ -83,7 +83,7 @@ class Network {
 			else
 				neuron[0][xy(x, y)].put(input[x][y] % 2 * 10 - 5);
 			neuron[0][xy(x, y)].process();
-			show("neuron[" + x + "," + y + "]" + neuron[0][xy(x, y)].output());
+			//show("neuron[" + x + "," + y + "]" + neuron[0][xy(x, y)].output());
 			//System.out.println("입력[" + x + ", " + y + "]: " + neuron[0][xy(x, y)].output());
 		}
 	}
@@ -109,7 +109,7 @@ class Network {
         Map<String, String> map = null;
    
         try {
-			show("I:ini 파일 열기");
+			//show("I:ini 파일 열기");
             File file = new File(path + File.separator + name + ".ini");
             ini.load(new FileReader(file));
            
@@ -119,13 +119,13 @@ class Network {
             	map.get("outputNode").equals(Integer.toString(outputNode)) && 
             	map.get("hiddenNode").equals(Integer.toString(hiddenNode)) && 
             	map.get("Layers").equals(Integer.toString(neuron.length))) {
-            	show("I:호환되는 뉴런 정보입니다.");
+            	//show("I:호환되는 뉴런 정보입니다.");
             	}
             else {
         		int e = 1 / 0; // for error
             }
 
-			show("I:불러오는 중");
+			//show("I:불러오는 중");
     		for(int l = 1; l < neuron.length; l++)
         	for(int n = 0; n < neuron[l].length; n++)
         	{
@@ -138,8 +138,8 @@ class Network {
         		}
         		neuron[l][n].setWeights(weight);
         	}
-			show("I:불러오기 성공");
-			show("ini 경로: " + path + File.separator + name + ".ini");
+			//show("I:불러오기 성공");
+			//show("ini 경로: " + path + File.separator + name + ".ini");
            
             
         } catch(Exception e) {
@@ -172,7 +172,7 @@ class Network {
             FileWriter fw = new FileWriter(file);
             fw.close();
 
-			show("I:저장하는 중");
+			//show("I:저장하는 중");
             Wini iniFile = new Wini(file);
             iniFile.put("Info", "inputNode", inputNode);
             iniFile.put("Info", "outputNode", outputNode);
@@ -180,7 +180,6 @@ class Network {
             iniFile.put("Info", "Layers", neuron.length);
             iniFile.store();
             double[] weight;
-            show("" + neuron.length);
     		for(int l = 1; l < neuron.length; l++)
         	for(int n = 0; n < neuron[l].length; n++)
         	{
@@ -193,8 +192,8 @@ class Network {
         	}
             
             iniFile.store();
-			show("I:저장 성공");
-			show("저장경로: " + path + File.separator + name + ".ini");
+			//show("I:저장 성공");
+			//show("저장경로: " + path + File.separator + name + ".ini");
            
         } catch(Exception e) {
 			show("E:저장에 실패했습니다.(" + e + ")");

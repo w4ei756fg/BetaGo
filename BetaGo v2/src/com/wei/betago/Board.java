@@ -26,11 +26,12 @@ class Board {
 		if (error == -1)
 		{
 			turn++;
+			/*
 			System.out.print("A:[");
 			System.out.print(x);
 			System.out.print(", ");
 			System.out.print(y);
-			System.out.println("]위치에 착수하였습니다.(현재 턴" + turn + ")");
+			System.out.println("]위치에 착수하였습니다.(현재 턴" + turn + ")");*/
 			return -1;
 		}
 		else
