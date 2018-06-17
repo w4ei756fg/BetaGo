@@ -75,9 +75,9 @@ class Board {
 	//판 시각화 출력
 	void drawBoard() {
 		System.out.println("┌┬┬┬┬┬┬┬┬┬┬┬┬┬┬┬┐");
-		for(int yy = 0; yy < 15; yy++) {
+		for(int yy = 0; yy < y; yy++) {
 			System.out.print("├");
-			for(int xx = 0; xx < 15; xx++)
+			for(int xx = 0; xx < x; xx++)
 				if (board[xx][yy] != 0)
 					System.out.print(dol[board[xx][yy] % 2 + 1]);
 				else
@@ -97,7 +97,7 @@ class Board {
 	}
 	
 	int xy(int x, int y) {
-		return x + y * 15;
+		return x + y * this.x;
 	}
 	
 	int whoIsWinner() {

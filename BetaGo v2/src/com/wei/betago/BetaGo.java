@@ -10,29 +10,42 @@ import java.util.Scanner;
 
 public class BetaGo {
 	
-	static int x = 15, y = 15, layers = 3;
+	static int x = 3, y = 3, layers = 3;
 	static int px, py;
 	static String path = "D:\\JAVA Projects", file = "neuron", dataFile = "D:/test.csv";
 
 	static Board board = new Board(x, y); // 보드 초기화
 
 	public static void main(String[] args) throws IOException {
-
 		int mode = 0;
 		Scanner userInput = new Scanner(System.in);
 		Scanner rateInput = new Scanner(System.in);
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		show("Q:Path?");
-		path = br.readLine();
-		show("Q:File?");
-		file = br.readLine();
-		show("Q:Datafile?");
-		dataFile = br.readLine();
+		BufferedReader br2 = new BufferedReader(new InputStreamReader(System.in));
+		if (args.length == 3) {
+			path = args[0];
+			file = args[1];
+			dataFile = args[2];
+		}
+		else if (args.length == 1 && args[0] == "manual") {
+			show("Q:Path?");
+			path = br2.readLine();
+			show("Q:File?");
+			file = br2.readLine();
+			show("Q:Datafile?");
+			dataFile = br2.readLine();
+		}
+		else {
+			show("I:기본값 세팅");
+			path = ".";
+			file = "neuron";
+			dataFile = ".\\test.csv";
+		}
 		do {
+			show("Q:작업 선택");
 			show("1. 플레이(사람vs사람)");
 			show("2. 플레이(사람vsAI)");
 			show("3. AI 학습모드");
-			show("4. 테스트모드");
+			show("4. 새 뉴런 정보 저장");
 			show("5. 종료");
 			mode = userInput.nextInt();
 			//mode = 3;
@@ -48,15 +61,18 @@ public class BetaGo {
 				Double rate = rateInput.nextDouble();
 				show("Q:반복 횟수?");
 				int c = userInput.nextInt();
+				show("Q:뉴런 정보를 초기화 후 학습? 1=yes 0=no");
+				int reset = userInput.nextInt();
 				for(int i = 0; i < c; i++)
-					learnAI(rate);
+					learnAI(rate, reset);
 				break;
 			case 4:
-				int[] sss = {1, 2, 3};
-				int[] ddd = sss.clone();
-				sss[0] = 3;
-				show(sss[0]);
-				show(ddd[0]);
+				Network AI = new Network(x*y, x*y, layers, x*y);
+				show("I:랜덤 생성중..");
+				AI.randomNeuron();
+				show("I:랜덤 생성완료");
+				AI.exportNetwork(path, file);
+				show("I:새로운 랜덤 뉴런 정보 저장 완료");
 			break;
 			}
 		} while(mode != 5);
@@ -66,7 +82,7 @@ public class BetaGo {
 		rateInput.close();
 	}
 	
-	static void learnAI(double rate) {
+	static void learnAI(double rate, int reset) {
 		String[][] rawData = loadCSV(dataFile);
 		if (rawData != null) {
 			show("I:불러오기 성공");
@@ -75,10 +91,10 @@ public class BetaGo {
 			for(int ii = 0; ii < 2; ii++)
 				data[i][ii] = Integer.parseInt(rawData[i][ii]);
 			show("I:학습 봇 생성");
-			Learning learn = new Learning(data, x, y, layers, path, file);
+			Learning learn = new Learning(data, x, y, layers, reset, path, file);
 			show("I:학습 봇 생성됨");
 			show("I:학습시작");
-			learn.learn(rate);
+			learn.learnData(rate);
 		}
 		else
 			show("E:데이터가 올바르지 않습니다.");
@@ -94,23 +110,16 @@ public class BetaGo {
 			while((line = br.readLine()) != null) {
 				String[] tt = line.split(",");
 				temp.add(tt); // 쉼표로 구분
-				/*
-				for(int i=0; i<temp.length; i++) {
-					System.out.print((i+1)+": "+temp[i]);
-					if(i!=temp.length-1) System.out.print(", ");
-					else System.out.println();
-				}
-				*/
 			}
 			br.close();
 			
-			show("size: " + temp.size());
+			//show("size: " + temp.size());
 			data = new String[temp.size()][2];
 			for(int i = 0; i < temp.size(); i++) {
 				data[i][0] = temp.get(i)[0];
 				data[i][1] = temp.get(i)[1];
-				show(i + ",x: " + temp.get(i)[0]);
-				show(i + ",y: " + temp.get(i)[1]);
+				//show(i + ",x: " + temp.get(i)[0]);
+				//show(i + ",y: " + temp.get(i)[1]);
 			}
 			return data;
 		} catch (Exception e) {
@@ -153,11 +162,13 @@ public class BetaGo {
 				int max = 0;
 				//최적값 최댓값 구하기
 				for(int i = 0; i < optimalData.length; i++) {
-					if (optimalData[i] > optimalData[max] || (board.getBoard(max / x , max % x) != 0 && optimalData[i] <= optimalData[max])) {
+					show("[" + i % x + "," + i / x + "]" + optimalData[i]);
+					if ((board.getBoard(i % x , i / x) == 0 && optimalData[i] > optimalData[max]) || 
+						(board.getBoard(max % x , max / x) != 0 && optimalData[i] <= optimalData[max])) {
 						max = i;
 					}
 				}
-				board.setTurn(max / x , max % x);//착수
+				board.setTurn(max % x, max / x);//착수
 			}
 		}
 		board.drawBoard();

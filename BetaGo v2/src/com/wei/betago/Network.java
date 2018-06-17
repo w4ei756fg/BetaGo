@@ -46,6 +46,13 @@ class Network {
 		}
 		return output;
 	}
+	double[] output(int layer) {
+		double[] output = new double[neuron[layer].length];
+		for(int i = 0; i < output.length; i++) {
+			output[i] = neuron[layer][i].output();
+		}
+		return output;
+	}
 	//모든 뉴런의 출력 출력
 	double[][] neuronOutput() {
 		double[][] output = new double[neuron.length][neuron[1].length]; // 다른 신경망에서 사용 시 수정 요함
@@ -66,19 +73,24 @@ class Network {
 			System.out.println("입력[" + i + "]: " + neuron[0][i].output());
 		}
 	}
-	//for gomoku
+	//for game
 	void input(int input[][]) {
-		for(int x = 0; x < 15; x++)
-		for(int y = 0; y < 15; y++)
-		{
-			neuron[0][xy(x, y)].put(input[x][y]);
+		for(int x = 0; x < BetaGo.x; x++)
+		for(int y = 0; y < BetaGo.y; y++)
+		{	
+			if (input[x][y] == 0)
+				neuron[0][xy(x, y)].put(0);
+			else
+				neuron[0][xy(x, y)].put(input[x][y] % 2 * 10 - 5);
 			neuron[0][xy(x, y)].process();
+			show("neuron[" + x + "," + y + "]" + neuron[0][xy(x, y)].output());
 			//System.out.println("입력[" + x + ", " + y + "]: " + neuron[0][xy(x, y)].output());
 		}
 	}
+	//for learning
 	void input(double input[][]) {
-		for(int x = 0; x < 15; x++)
-		for(int y = 0; y < 15; y++)
+		for(int x = 0; x < BetaGo.x; x++)
+		for(int y = 0; y < BetaGo.y; y++)
 		{
 			neuron[0][xy(x, y)].put(input[x][y]);
 			neuron[0][xy(x, y)].process();
@@ -191,6 +203,13 @@ class Network {
     }
 	
 	//뉴런 가중치 정보 출력
+	double[][] getNeuronWeights(int layer) { // 특정 계층
+		double[][] neuron = new double[this.hiddenNode][];
+		for(int n = 0; n < this.neuron[layer].length; n++) {
+			neuron[n] = this.neuron[layer][n].getWeights();
+		}
+		return neuron;
+	}
 	double[][][] getNeuronWeights() {
 		double[][][] neuron = new double[this.neuron.length][this.hiddenNode][];
 		for(int l = 0; l < this.neuron.length; l++)
@@ -203,6 +222,11 @@ class Network {
 		return neuron[l][n].getWeight(w);
 	}
 	//뉴런 가중치 정보 설정
+	void setNeuronWeights(int layer, double[][] newNeuron) { // 특정 계층
+		for(int n = 0; n < neuron[layer].length; n++) {
+			neuron[layer][n].setWeights(newNeuron[n]);
+		}
+	}
 	void setNeuronWeights(double[][][] newNeuron) {
 		for(int l = 0; l < neuron.length; l++)
 		for(int n = 0; n < neuron[l].length; n++) {
@@ -214,7 +238,7 @@ class Network {
 	}
 	
 	private int xy(int x, int y) {
-		return x + y * 15;
+		return x + y * BetaGo.x;
 	}
 	private void show(String str) {
 		System.out.println(str);
