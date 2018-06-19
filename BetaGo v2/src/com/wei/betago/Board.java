@@ -75,7 +75,10 @@ class Board {
 	
 	//판 시각화 출력
 	void drawBoard() {
-		System.out.println("┌┬┬┬┬┬┬┬┬┬┬┬┬┬┬┬┐");
+		System.out.print("┌");
+		for(int xx = 0; xx < x; xx++)
+			System.out.print("┬");
+		System.out.println("┐");
 		for(int yy = 0; yy < y; yy++) {
 			System.out.print("├");
 			for(int xx = 0; xx < x; xx++)
@@ -85,7 +88,10 @@ class Board {
 					System.out.print(dol[0]);
 			System.out.println("┤");
 		}
-		System.out.println("└┴┴┴┴┴┴┴┴┴┴┴┴┴┴┴┘");
+		System.out.print("└");
+		for(int xx = 0; xx < x; xx++)
+			System.out.print("┴");
+		System.out.println("┘");
 	}
 	
 	//판 정보 출력

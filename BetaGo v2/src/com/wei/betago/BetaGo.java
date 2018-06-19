@@ -63,11 +63,7 @@ public class BetaGo {
 				int c = userInput.nextInt();
 				show("Q:뉴런 정보를 초기화 후 학습? 1=yes 0=no");
 				int reset = userInput.nextInt();
-				for(int i = 0; i < c; i++) {
-					learnAI(rate, reset);
-					if (i % 100 == 0)
-						show(i + "번째 학습 시작");
-				}
+				learnAI(c, rate, reset);
 				show("A:학습 종료");
 				break;
 			case 4:
@@ -86,19 +82,34 @@ public class BetaGo {
 		rateInput.close();
 	}
 	
-	static void learnAI(double rate, int reset) {
+	static void learnAI(int count, double rate, int reset) {
 		String[][] rawData = loadCSV(dataFile);
+		double error_rate = 0;
+		int cut = 0;
 		if (rawData != null) {
-			//show("I:불러오기 성공");
+			show("I:학습 데이터 불러오기 성공");
 			int[][] data = new int[rawData.length][2];
 			for(int i = 0; i < rawData.length; i++)
 			for(int ii = 0; ii < 2; ii++)
 				data[i][ii] = Integer.parseInt(rawData[i][ii]);
-			//show("I:학습 봇 생성");
+			show("I:학습 봇 생성");
 			Learning learn = new Learning(data, x, y, layers, reset, path, file);
-			//show("I:학습 봇 생성됨");
-			//show("I:학습시작");
-			learn.learnData(rate);
+			show("I:학습 봇 생성됨(bot:" + learn + ")");
+			show("I:학습시작");
+			for(int i = 0; Math.pow(10, i) < count; i++)
+				cut = i - 1;
+			error_rate = 0;
+			for(int i = 0; i < count; i++) {
+				error_rate += learn.learnData(rate);
+				if (i % Math.pow(10, cut) == 0) {
+					show("I:" + i + "번째 학습 완료(에러율:" + Math.abs(error_rate / Math.pow(10, cut)) + ")");
+					error_rate = 0;
+				}
+			}
+			show("A:" + count + "회 학습완료");
+			show("I:뉴런 정보 저장 중");
+			learn.AI.exportNetwork(path, file);
+			show("I:뉴런 정보 저장 완료");
 		}
 		else
 			show("E:데이터가 올바르지 않습니다.");

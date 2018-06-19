@@ -6,7 +6,7 @@ class Learning {
 	private int[][] data;
 	private int x, y, layers;
 	private String path, file;
-	private Network AI;
+	Network AI;
 	Learning (int[][] data, int x, int y, int layers, int reset,String path, String file) {
 		this.data = data;
 		this.x = x;
@@ -27,19 +27,23 @@ class Learning {
 		//userInput.close();
 	}
 	
-	void learnData(double rate) {
+	double learnData(double rate) {
+		double error_sum = 0;
 		for(int i = 0; i < data.length; i++)
-			learn(rate, i);
+			error_sum += learn(rate, i);
+		return error_sum / data.length;
 	}
 	
 	
-	void learn(double rate, int turn) {
+	double learn(double rate, int turn) {
 		int[][] board = simulateBoard(turn);
 		double[] input = new double[xy(this.x, this.y) - x],
 				output = new double[xy(this.x, this.y) - x], 
 				target = new double[xy(this.x, this.y) - x];
 		double[][] weight;
 		double[] error = new double[target.length], error_next = new double[error.length];
+		
+		double error_target = 0;
 		
 
 		//show("I:" + turn + "번째 수 학습시작");
@@ -69,7 +73,9 @@ class Learning {
 			//n층 오차 구함
 			if (l == layers - 1) { // output layer 일 때,   1
 				for(int i = 0; i < output.length; i++) {
-					error[i] = output[i] - target[i];//Math.pow(output[i] - target[i], 2); // output계층 오차함수
+					// output계층 오차함수
+					//error[i] = -target[i] * Math.log10(output[i]) - (1 - target[i]) * Math.log10(1 - output[i]); //로지스틱 회귀 함수
+					error[i] = output[i] - target[i];
 					//show("error[" + l + "," + i + "]: " + error[i]); // 출력 계층 오차 표시
 				}
 				error_next = error;
@@ -97,7 +103,11 @@ class Learning {
 			//update weights
 			AI.setNeuronWeights(l , weight);
 		}
-		AI.exportNetwork(path, file);
+		//AI.exportNetwork(path, file); // 오버헤드 방지
+		
+		//오차율 반환
+		error_target = AI.output(layers - 1)[xy(data[turn][0], data[turn][1])] - target[xy(data[turn][0], data[turn][1])];
+		return error_target;
 	}
 	
 	//데이터에서 특정 턴까지 진행시킨 판을 반환함
